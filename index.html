@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MB Statbera rekvizitai</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #111;
+    }
+    .card {
+      max-width: 520px;
+      margin: 24px auto;
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+    .subtitle {
+      color: #555;
+      margin-bottom: 22px;
+    }
+    .row {
+      border-top: 1px solid #e7e7e7;
+      padding: 14px 0;
+    }
+    .label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .value {
+      font-size: 17px;
+      word-break: break-word;
+    }
+    .iban {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 12px;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #efefef;
+      color: #111;
+    }
+    .notice {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #236b2e;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>MB Statbera</h1>
+    <div class="subtitle">Įmonės rekvizitai</div>
+
+    <div class="row">
+      <div class="label">Banko sąskaita</div>
+      <div class="value iban" id="iban">LT614010051003920814</div>
+      <button onclick="copyText('iban')">Kopijuoti sąskaitą</button>
+    </div>
+
+    <div class="row">
+      <div class="label">Bankas</div>
+      <div class="value">Luminor</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Įmonės kodas</div>
+      <div class="value" id="companyCode">304495320</div>
+      <button class="secondary" onclick="copyText('companyCode')">Kopijuoti įmonės kodą</button>
+    </div>
+
+    <div class="row">
+      <div class="label">PVM mokėtojo kodas</div>
+      <div class="value" id="vat">LT100014411414</div>
+      <button class="secondary" onclick="copyText('vat')">Kopijuoti PVM kodą</button>
+    </div>
+
+    <div class="row">
+      <div class="label">Registracijos adresas</div>
+      <div class="value">Ąžuolo g. 3B, Veiveriai, LT-59293 Prienų r.</div>
+    </div>
+
+    <div class="row">
+      <div class="label">El. paštas</div>
+      <div class="value" id="email">info@gmail.com</div>
+      <button class="secondary" onclick="copyText('email')">Kopijuoti el. paštą</button>
+    </div>
+
+    <div class="row">
+      <div class="label">Telefonas</div>
+      <div class="value" id="phone">+37068154669</div>
+      <button class="secondary" onclick="copyText('phone')">Kopijuoti telefoną</button>
+    </div>
+
+    <button onclick="copyAll()">Kopijuoti visus rekvizitus</button>
+    <div class="notice" id="notice">Nukopijuota.</div>
+  </main>
+
+  <script>
+    function showNotice(text) {
+      const notice = document.getElementById('notice');
+      notice.textContent = text || 'Nukopijuota.';
+      notice.style.display = 'block';
+      setTimeout(() => notice.style.display = 'none', 1800);
+    }
+
+    function copyPlain(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      return Promise.resolve();
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).innerText.trim();
+      copyPlain(text).then(() => showNotice('Nukopijuota: ' + text));
+    }
+
+    function copyAll() {
+      const text = `MB Statbera
+Įmonės kodas: 304495320
+PVM mokėtojo kodas: LT100014411414
+Registracijos adresas: Ąžuolo g. 3B, Veiveriai, LT-59293 Prienų r.
+Bankas: Luminor
+Atsiskaitomoji sąskaita: LT614010051003920814
+El. paštas: info@gmail.com
+Telefono numeris: +37068154669`;
+      copyPlain(text).then(() => showNotice('Visi rekvizitai nukopijuoti.'));
+    }
+  </script>
+</body>
+</html>
